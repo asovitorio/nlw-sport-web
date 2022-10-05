@@ -6,7 +6,8 @@ import { GameBanner } from './components/GameBaner'
 import { CreateAdBanner } from './components/CreateAdBanner'
 import CreateAdModal from './components/CreateAdModal'
 import { api } from './utils/api'
-
+import { useKeenSlider } from 'keen-slider/react'
+import 'keen-slider/keen-slider.min.css'
 export interface Game {
   id: string
   title: string
@@ -19,10 +20,14 @@ export interface Game {
 function App() {
   const [games, setGames] = useState<Game[]>([])
   useEffect(() => {
-    api.get('/games')
-      .then((games) => setGames(games.data))
+    api.get('/games').then((games) => setGames(games.data))
   }, [])
- 
+  const [ref] = useKeenSlider<HTMLDivElement>({
+    slides: {
+      perView: 6,
+      spacing: 15,
+    },
+  })
   return (
     <div className="max-w-[1344px]  mx-auto flex flex-col items-center my-20">
       <img src={logoImg} />
@@ -33,7 +38,14 @@ function App() {
         </span>{' '}
         está aqui!
       </h1>
-      <div className="grid grid-cols-6 gap-6 mt-16">
+      <div ref={ref} className="keen-slider mt-16">
+        <div className="keen-slider__slide">
+         </div>
+      </div>
+      <GameBanner
+          
+            />
+      {/* <div className="grid grid-cols-6 gap-6 mt-16">
         {games.map((game) => {
           return (
             <GameBanner
@@ -44,7 +56,7 @@ function App() {
             />
           )
         })}
-      </div>
+      </div> */}
       <Dialog.Root>
         <CreateAdBanner />
         <CreateAdModal />
